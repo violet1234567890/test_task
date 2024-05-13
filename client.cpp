@@ -4,13 +4,15 @@
 Client::Client()
 {
   this->table = 0;
+  Time time{0, 0};
+  this->set_time(time);
 }
-int Client::get_table()
+int Client::get_table() const
 {
   return this->table;
 }
 
-const Time & Client::get_time()
+const Time & Client::get_time() const
 {
   return this->enter_time;
 }

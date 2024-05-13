@@ -7,9 +7,9 @@ class Client
 {
  public:
   Client();
-  int get_table();
+  int get_table() const;
   void set_table(int table);
-  const Time & get_time();
+  const Time & get_time() const;
   void set_time(const Time & time);
   friend std::istream & operator>>(std::istream &, Client & client);
   friend std::ostream & operator<<(std::ostream &, const Client & client);

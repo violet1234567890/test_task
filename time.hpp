@@ -4,6 +4,9 @@
 struct Time {
     size_t minutes;
     size_t hours;
+  int hours_differ(const Time & time2);
+  Time time_differ(const Time & time2);
+  Time add(const Time & time2);
   };
   std::istream & operator>>(std::istream & in, Time & time);
   std::ostream & operator<<(std::ostream & out, const Time & time);
