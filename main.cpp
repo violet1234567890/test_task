@@ -122,11 +122,12 @@ int main(int argc, char * argv[])
             print_error(std::cout, event_time, "PlaceIsBusy");
             break;
           }
-          if (int table = clients.find(client)->get_table() != 0)
+          int table = clients.find(client)->get_table();
+          if (table != 0)
           {
             is_table_busy[table - 1] = false;
             profit[table - 1] += price * event_time.hours_differ(clients.find(client)->get_time());
-            table_time[table - 1].add(event_time.time_differ(clients.find(client)->get_time())); //повторение
+            table_time[table - 1].add(time_differ(event_time, clients.find(client)->get_time())); //повторение
           }
           clients.erase(client);
           client.set_table(table_num);
@@ -193,15 +194,19 @@ int main(int argc, char * argv[])
         }
         if (clients.find(client) != clients.end())
         {
-          if (int table = clients.find(client)->get_table() != 0)
+          int table = clients.find(client)->get_table();
+          if (table != 0)
           {
             profit[table - 1] += price * event_time.hours_differ(clients.find(client)->get_time()); //повторение файнда
-            table_time[table - 1].add(event_time.time_differ(clients.find(client)->get_time())); //повторение
+            table_time[table - 1].add(time_differ(event_time, clients.find(client)->get_time())); //повторение
             if (!queue.empty())
             {
+              clients.erase(queue[0]);
               event_id = 12;
-              print_event(std::cout, event_time, event_id, queue[0]);
+              print_event(std::cout, event_time, event_id, queue[0], table);
               queue[0].set_table(table);
+              queue[0].set_time(event_time);
+              clients.insert(queue[0]);
               queue.pop_front();
             }
           }
@@ -218,16 +223,17 @@ int main(int argc, char * argv[])
         //
     }
   }
-  for (Client k : clients)
+  for (const Client & k : clients)
   {
-    if (k.get_table() != 0)
+    int table = k.get_table();
+    if (table != 0)
     {
-      profit[k.get_table() - 1] += price * close_time.hours_differ(clients.find(k)->get_time());
-      table_time[k.get_table() - 1].add(close_time.time_differ(clients.find(k)->get_time())); //повторение
+      profit[k.get_table() - 1] += price * close_time.hours_differ(clients.find(k)->get_time());; //убрать из структуры
+      table_time[k.get_table() - 1].add(time_differ(close_time, clients.find(k)->get_time())); //повторение
     }
     int event_id = 11;
     print_event(std::cout, close_time, event_id, k);
-    clients.erase(k);
+    //clients.erase(k);
   }
   std::cout << close_time << '\n';
   for (int i = 0; i < tables_number; i++)

@@ -11,21 +11,10 @@ int Time::hours_differ(const Time & time2)
   return hours_diff;
 }
 
-Time Time::time_differ(const Time & time2)
+void Time::add(const Time & time2)
 {
-  Time time;
-  time.hours = this->hours - time2.hours;
-  if (this->minutes < time2.minutes)
-  {
-    time.minutes = 60 + this->minutes - time2.minutes;
-    time.hours -= 1;
-  }
-  return time;
-}
-
-Time Time::add(const Time & time2)
-{
-  return Time{this->hours + time2.hours, this->minutes + time2.minutes};
+  this->hours += time2.hours;
+  this->minutes += time2.minutes;
 }
 
 std::istream & operator>>(std::istream & in, Time & time)
@@ -57,4 +46,21 @@ bool operator==(Time & time1, Time & time2)
 bool operator>(Time & time1, Time & time2)
 {
   return !(time1 < time2);
+}
+
+Time time_differ(const Time & time1, const Time & time2)
+{
+  Time time = {0, 0};
+  time.hours = time1.hours - time2.hours;
+  if (time1.minutes < time2.minutes)
+  {
+    time.minutes = 60 - time2.minutes;
+    time.minutes += time1.minutes;
+    time.hours -= 1;
+  }
+  else
+  {
+    time.minutes = time1.minutes - time2.minutes;
+  }
+  return time;
 }
