@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <deque>
-#include <set>
+#include <map>
 #include "time.hpp"
 #include "client.hpp"
 
@@ -62,7 +62,7 @@ int main(int argc, char * argv[])
   std::vector< int > profit(tables_number);
   std::vector< Time > table_time(tables_number);
   std::vector< bool > is_table_busy(tables_number);
-  std::set< Client > clients; //using set because we need alphabet order
+  std::map< std::string, Client > clients; //using map because we need alphabet order
   in >> open_time >> close_time;
   std::deque< Client > queue; //using
   if (!in)
@@ -79,7 +79,7 @@ int main(int argc, char * argv[])
   }
   if (price < 0)
   {
-    std::cerr << "Price cannot be negative\n"; //??????????
+    std::cerr << "Price cannot be negative\n";
     return 4;
   }
   for (size_t i = 0; i < tables_number; i++)
@@ -131,16 +131,17 @@ int main(int argc, char * argv[])
           print_error(std::cout, event_time, "NotOpenYet");
           break;
         }
-        if (clients.find(client) != clients.end())
+        if (clients.find(client.get_name()) != clients.end())
         {
           print_error(std::cout, event_time, "YouShallNotPass");
         }
         else
         {
-          clients.insert(client);
+          clients.insert(std::pair(client.get_name(), client));
         }
         break;
       case 2:
+      {
         int table_num;
         in >> table_num;
         if (!in)
@@ -160,31 +161,31 @@ int main(int argc, char * argv[])
           std::cerr << "Table number cannot be negative\n";
           break;
         }
-        if (clients.find(client) != clients.end())
+        if (clients.find(client.get_name()) != clients.end())
         {
           if (is_table_busy[table_num - 1])
           {
             print_error(std::cout, event_time, "PlaceIsBusy");
             break;
           }
-          int table = clients.find(client)->get_table();
-          Time time = clients.find(client)->get_time();
+          Client & client_ref = clients[client.get_name()];
+          int table = client_ref.get_table();
+          Time time = client_ref.get_time();
           if (table != 0)
           {
             is_table_busy[table - 1] = false;
             profit[table - 1] += price * hours_differ(event_time, time);
             table_time[table - 1].add(time_differ(event_time, time));
           }
-          clients.erase(client);
-          client.set_table(table_num);
+          client_ref.set_table(table_num);
           is_table_busy[table_num - 1] = true;
-          client.set_time(event_time);
-          clients.insert(client); //????
+          client_ref.set_time(event_time);
         }
         else
         {
           print_error(std::cout, event_time, "ClientUnknown");
         }
+      }
         break;
       case 3:
       {
@@ -195,7 +196,7 @@ int main(int argc, char * argv[])
           print_error(std::cout, event_time, "NotOpenYet");
           break;
         }
-        if (clients.find(client) != clients.end())
+        if (clients.find(client.get_name()) != clients.end())
         {
           for (bool k: is_table_busy)
           {
@@ -216,7 +217,7 @@ int main(int argc, char * argv[])
             {
               event_id = 11;
               print_event(std::cout, event_time, event_id, client);
-              clients.erase(client);
+              clients.erase(client.get_name());
             }
             else
             {
@@ -238,26 +239,26 @@ int main(int argc, char * argv[])
           print_error(std::cout, event_time, "NotOpenYet");
           break;
         }
-        if (clients.find(client) != clients.end())
+        if (clients.find(client.get_name()) != clients.end())
         {
-          int table = clients.find(client)->get_table();
-          Time time = clients.find(client)->get_time();
+          Client & client_ref = clients[client.get_name()];
+          int table = client_ref.get_table();
+          Time time = client_ref.get_time();
           if (table != 0)
           {
             profit[table - 1] += price * hours_differ(event_time, time);
             table_time[table - 1].add(time_differ(event_time, time));
             if (!queue.empty())
             {
-              clients.erase(queue[0]);
+              Client & new_client_ref = clients[queue[0].get_name()];
               event_id = 12;
               print_event(std::cout, event_time, event_id, queue[0], table);
-              queue[0].set_table(table);
-              queue[0].set_time(event_time);
-              clients.insert(queue[0]);
+              new_client_ref.set_table(table);
+              new_client_ref.set_time(event_time);
               queue.pop_front();
             }
           }
-          clients.erase(client);
+          clients.erase(client.get_name());
         }
         else
         {
@@ -273,15 +274,15 @@ int main(int argc, char * argv[])
   }
   for (auto k = clients.begin(); k != clients.end(); k++)
   {
-    int table = k->get_table();
-    Time time = k->get_time();
+    int table = k->second.get_table();
+    Time time = k->second.get_time();
     if (table != 0)
     {
-      profit[k->get_table() - 1] += price * hours_differ(close_time, time);
-      table_time[k->get_table() - 1].add(time_differ(close_time, time));
+      profit[k->second.get_table() - 1] += price * hours_differ(close_time, time);
+      table_time[k->second.get_table() - 1].add(time_differ(close_time, time));
     }
     int event_id = 11;
-    print_event(std::cout, close_time, event_id, *k);
+    print_event(std::cout, close_time, event_id, k->second);
   }
   clients.clear();
   std::cout << close_time << '\n';

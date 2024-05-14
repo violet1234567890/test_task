@@ -28,9 +28,9 @@ void Client::set_time(const Time & time)
   this->enter_time.hours = time.hours;
 }
 
-void Client::set_table(int table)
+void Client::set_table(int table_num)
 {
-  this->table = table;
+  this->table = table_num;
 }
 
 std::istream & operator>>(std::istream & in, Client & client)
