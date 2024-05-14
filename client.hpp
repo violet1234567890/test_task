@@ -7,6 +7,7 @@ class Client
 {
  public:
   Client();
+  std::string get_name() const;
   int get_table() const;
   void set_table(int table);
   const Time & get_time() const;

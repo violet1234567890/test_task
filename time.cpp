@@ -1,15 +1,5 @@
 #include <iostream>
 #include "time.hpp"
-int Time::hours_differ(const Time & time2)
-{
-  int minutes_diff = this->minutes - time2.minutes;
-  int hours_diff = this->hours - time2.hours + 1;
-  if (minutes_diff < 0)
-  {
-    hours_diff -= 1;
-  }
-  return hours_diff;
-}
 
 void Time::add(const Time & time2)
 {
@@ -63,4 +53,15 @@ Time time_differ(const Time & time1, const Time & time2)
     time.minutes = time1.minutes - time2.minutes;
   }
   return time;
+}
+
+int hours_differ(const Time & time1, const Time & time2)
+{
+  int minutes_diff = time1.minutes - time2.minutes;
+  int hours_diff = time1.hours - time2.hours + 1;
+  if (minutes_diff < 0)
+  {
+    hours_diff -= 1;
+  }
+  return hours_diff;
 }

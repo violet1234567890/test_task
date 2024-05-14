@@ -7,6 +7,12 @@ Client::Client()
   Time time{0, 0};
   this->set_time(time);
 }
+
+std::string Client::get_name() const
+{
+  return this->name;
+}
+
 int Client::get_table() const
 {
   return this->table;
