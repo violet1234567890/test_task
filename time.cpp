@@ -3,8 +3,14 @@
 
 void Time::add(const Time & time2)
 {
-  this->hours += time2.hours;
   this->minutes += time2.minutes;
+  if (this->minutes >= 60)
+  {
+    this->minutes -= 60;
+    this->hours += 1;
+  }
+  this->hours += time2.hours;
+
 }
 
 std::istream & operator>>(std::istream & in, Time & time)
