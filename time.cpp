@@ -27,6 +27,7 @@ std::istream & operator>>(std::istream & in, Time & time)
 std::ostream & operator<<(std::ostream & out, const Time & time)
 {
   out << time.hours / 10 << time.hours % 10 << ':' << time.minutes / 10 << time.minutes % 10;
+  return out;
 }
 
 bool operator<(Time & time1, Time & time2)

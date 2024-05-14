@@ -23,12 +23,14 @@ std::ostream & print_error(std::ostream & out, const Time & event_time, const st
 std::ostream & print_event(std::ostream & out, const Time & event_time, int id, const Client & client)
 {
   out << event_time << ' ' << id << ' ' << client << '\n';
+  return out;
 }
 
 std::ostream & print_event(std::ostream & out, const Time & event_time, int id,
     const Client & client, int table)
 {
   out << event_time << ' ' << id << ' ' << client << ' ' << table << '\n';
+  return out;
 }
 
 int main(int argc, char * argv[])
