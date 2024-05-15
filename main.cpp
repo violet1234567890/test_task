@@ -65,9 +65,9 @@ int main(int argc, char * argv[])
   std::vector< int > profit(tables_number);
   std::vector< Time > table_time(tables_number);
   std::vector< bool > is_table_busy(tables_number);
-  std::map< std::string, Client > clients; //using map because we need alphabet order
+  std::map< std::string, Client > clients;
   in >> open_time >> close_time;
-  std::deque< Client > queue; //using
+  std::deque< Client > queue;
   if (!in)
   {
     if (open_time.minutes != 0 && open_time.hours != 0 && close_time.minutes != 0 && close_time.hours != 0)
