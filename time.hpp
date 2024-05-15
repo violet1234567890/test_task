@@ -1,9 +1,9 @@
-#ifndef TEST_TASK_YADRO_TIME_HPP
-#define TEST_TASK_YADRO_TIME_HPP
+#ifndef TEST_TASK_TIME_HPP
+#define TEST_TASK_TIME_HPP
 #include <iosfwd>
 struct Time {
-    size_t minutes;
-    size_t hours;
+    int minutes;
+    int hours;
   void add(const Time & time2);
   };
   int hours_differ(const Time & time1, const Time & time2);

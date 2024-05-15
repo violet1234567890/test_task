@@ -1,5 +1,5 @@
-#ifndef TEST_TASK_YADRO_CLIENT_HPP
-#define TEST_TASK_YADRO_CLIENT_HPP
+#ifndef TEST_TASK_CLIENT_HPP
+#define TEST_TASK_CLIENT_HPP
 #include <string>
 #include <iosfwd>
 #include "time.hpp"
@@ -21,6 +21,4 @@ class Client
   int table;
   Time enter_time;
 };
-
-
 #endif

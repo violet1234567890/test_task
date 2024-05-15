@@ -55,6 +55,7 @@ int main(int argc, char * argv[])
   }
   if (tables_number < 0)
   {
+    std::cout << tables_number << '\n';
     std::cerr << "Amount of tables cannot be negative\n";
     return 4;
   }
@@ -69,7 +70,12 @@ int main(int argc, char * argv[])
   std::deque< Client > queue; //using
   if (!in)
   {
+    if (open_time.minutes != 0 && open_time.hours != 0 && close_time.minutes != 0 && close_time.hours != 0)
+    {
+      std::cout << open_time << ' ' << close_time << '\n';
+    }
     print_error_string(std::cout, in);
+    std::cout << "Incorrect format of time\n";
     return 3;
   }
   std::cout << open_time << '\n';
@@ -89,7 +95,7 @@ int main(int argc, char * argv[])
     is_table_busy[i] = false;
     profit[i] = 0;
     table_time[i] = {0, 0};
-  };
+  }
   while (!in.eof())
   {
     Time event_time{0, 0};
@@ -99,21 +105,21 @@ int main(int argc, char * argv[])
     if (!in)
     {
       print_error_string(std::cout, in);
-      return 3;
+      continue;
     }
     in >> event_id;
     if (!in)
     {
       std::cout << event_time << ' ';
       print_error_string(std::cout, in);
-      return 3;
+      continue;
     }
     in >> client;
     if (!in)
     {
       std::cout << event_time << ' ' << event_id << ' ';
       print_error_string(std::cout, in);
-      return 3;
+      continue;
     }
     for (char i : client.get_name())
     {
@@ -121,7 +127,7 @@ int main(int argc, char * argv[])
       {
         print_event(std::cout, event_time, event_id, client);
         print_error_string(std::cout, in);
-        return 3;
+        continue;
       }
     }
     switch (event_id)
@@ -150,7 +156,7 @@ int main(int argc, char * argv[])
         {
           std::cout << event_time << ' ' << event_id << ' ' << client << ' ';
           print_error_string(std::cout, in);
-          return 3;
+          break;
         }
         print_event(std::cout, event_time, event_id, client, table_num);
         if ((event_time < open_time) || (event_time > close_time))
@@ -259,6 +265,10 @@ int main(int argc, char * argv[])
               new_client_ref.set_time(event_time);
               queue.pop_front();
             }
+            else
+            {
+              is_table_busy[table] = false;
+            }
           }
           clients.erase(client.get_name());
         }
@@ -271,7 +281,8 @@ int main(int argc, char * argv[])
       default:
         std::cout << event_time << ' ' << event_id << ' ' << client << ' ';
         print_error_string(std::cout, in);
-        std::cout <<"Incorrect event\n";
+        std::cerr <<"Incorrect event\n";
+        break;
     }
   }
   for (auto k = clients.begin(); k != clients.end(); k++)
