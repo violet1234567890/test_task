@@ -104,7 +104,16 @@ int main(int argc, char * argv[])
     in >> event_time;
     if (!in)
     {
+      if (event_time.minutes != 0 && event_time.hours)
+      {
+        std::cout << open_time << ' ' << close_time << '\n';
+      }
       print_error_string(std::cout, in);
+      return 3;
+    }
+    if (in.peek() == 13)
+    {
+      std::cout << event_time;
       return 3;
     }
     in >> event_id;
@@ -112,6 +121,11 @@ int main(int argc, char * argv[])
     {
       std::cout << event_time << ' ';
       print_error_string(std::cout, in);
+      return 3;
+    }
+    if (in.peek() == 13)
+    {
+      std::cout << event_time << ' ' << event_id << '\n';
       return 3;
     }
     in >> client;
@@ -152,6 +166,11 @@ int main(int argc, char * argv[])
       case 2:
       {
         int table_num;
+        if (in.peek() == 13)
+        {
+          print_event(std::cout, event_time, event_id, client);
+          return 3;
+        }
         in >> table_num;
         if (!in)
         {
