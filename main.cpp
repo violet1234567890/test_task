@@ -206,14 +206,17 @@ int main(int argc, char * argv[])
         }
         if (clients.find(client.get_name()) != clients.end())
         {
+          int count = 0;
           for (bool k: is_table_busy)
           {
             if (!k)
             {
               print_error(std::cout, event_time, "ICanWaitNoLonger!");
               queue_flag = false;
+              is_table_busy[count] = true;
               break;
             }
+            count++;
           }
           if (!queue_flag)
           {
