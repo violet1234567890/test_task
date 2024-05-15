@@ -15,7 +15,7 @@ class Client
   friend std::istream & operator>>(std::istream &, Client & client);
   friend std::ostream & operator<<(std::ostream &, const Client & client);
   friend bool operator==(const Client & client1, const Client & client2);
-  friend bool operator<(const Client & client1, const Client & client2);
+  friend bool operator<(const Client & client1, const Client & client2); //comparator for std::map
  private:
   std::string name;
   int table;
