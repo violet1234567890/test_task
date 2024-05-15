@@ -112,7 +112,7 @@ int main(int argc, char * argv[])
       print_error_string(std::cout, in);
       return 3;
     }
-    if (in.peek() == 13) //checking if line ends. 13 is the code of carriage return
+    if (in.get() == 13) //checking if line ends. 13 is the code of carriage return
     {
       std::cout << event_time;
       return 3;
@@ -124,7 +124,7 @@ int main(int argc, char * argv[])
       print_error_string(std::cout, in);
       return 3;
     }
-    if (in.peek() == 13)
+    if (in.get() == 13)
     {
       std::cout << event_time << ' ' << event_id << '\n';
       return 3;
@@ -149,6 +149,7 @@ int main(int argc, char * argv[])
     if (((event_time < open_time) || (event_time > close_time)) && event_id != 2)
       //id 2 is not included because it needs the input of table number
     {
+      print_event(std::cout, event_time, event_id, client);
       print_error(std::cout, event_time, "NotOpenYet");
       continue;
     }
@@ -168,7 +169,7 @@ int main(int argc, char * argv[])
       case 2: //client sits at the table
       {
         int table_num;
-        if (in.peek() == 13)
+        if (in.get() == 13)
         {
           print_event(std::cout, event_time, event_id, client);
           return 3;
