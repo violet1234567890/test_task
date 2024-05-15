@@ -105,40 +105,41 @@ int main(int argc, char * argv[])
     if (!in)
     {
       print_error_string(std::cout, in);
-      continue;
+      return 3;
     }
     in >> event_id;
     if (!in)
     {
       std::cout << event_time << ' ';
       print_error_string(std::cout, in);
-      continue;
+      return 3;
     }
     in >> client;
     if (!in)
     {
       std::cout << event_time << ' ' << event_id << ' ';
       print_error_string(std::cout, in);
-      continue;
+      return 3;
     }
     for (char i : client.get_name())
     {
-      if (!(std::isalpha(i) || std::isdigit(i)))
+      if (!(std::isalpha(i) || std::isdigit(i) || (i == '-') || (i == '_')))
       {
         print_event(std::cout, event_time, event_id, client);
         print_error_string(std::cout, in);
-        continue;
+        std::cout << "Incorrect format of name\n";
+        return 3;
       }
+    }
+    if (((event_time < open_time) || (event_time > close_time)) && event_id != 2)
+    {
+      print_error(std::cout, event_time, "NotOpenYet");
+      continue;
     }
     switch (event_id)
     {
       case 1:
         print_event(std::cout, event_time, event_id, client);
-        if ((event_time < open_time) || (event_time > close_time))
-        {
-          print_error(std::cout, event_time, "NotOpenYet");
-          break;
-        }
         if (clients.find(client.get_name()) != clients.end())
         {
           print_error(std::cout, event_time, "YouShallNotPass");
@@ -159,20 +160,20 @@ int main(int argc, char * argv[])
           break;
         }
         print_event(std::cout, event_time, event_id, client, table_num);
-        if (table_num > tables_number || table_num <= 0)
-        {
-          std::cout << "Incorrect table number\n";
-          break;
-        }
         if ((event_time < open_time) || (event_time > close_time))
         {
           print_error(std::cout, event_time, "NotOpenYet");
           break;
         }
+        if (table_num > tables_number || table_num <= 0)
+        {
+          std::cout << "Incorrect table number\n";
+          return 3;
+        }
         if (tables_number < 0)
         {
           std::cerr << "Table number cannot be negative\n";
-          break;
+          return 3;
         }
         if (clients.find(client.get_name()) != clients.end())
         {
@@ -204,11 +205,6 @@ int main(int argc, char * argv[])
       {
         bool queue_flag = true;
         print_event(std::cout, event_time, event_id, client);
-        if ((event_time < open_time) || (event_time > close_time))
-        {
-          print_error(std::cout, event_time, "NotOpenYet");
-          break;
-        }
         if (clients.find(client.get_name()) != clients.end())
         {
           int count = 0;
@@ -218,7 +214,6 @@ int main(int argc, char * argv[])
             {
               print_error(std::cout, event_time, "ICanWaitNoLonger!");
               queue_flag = false;
-              is_table_busy[count] = true;
               break;
             }
             count++;
@@ -250,11 +245,6 @@ int main(int argc, char * argv[])
       case 4:
       {
         print_event(std::cout, event_time, event_id, client);
-        if ((event_time < open_time) || (event_time > close_time))
-        {
-          print_error(std::cout, event_time, "NotOpenYet");
-          break;
-        }
         if (clients.find(client.get_name()) != clients.end())
         {
           Client & client_ref = clients[client.get_name()];
@@ -275,7 +265,7 @@ int main(int argc, char * argv[])
             }
             else
             {
-              is_table_busy[table] = false;
+              is_table_busy[table - 1] = false;
             }
           }
           clients.erase(client.get_name());
@@ -290,7 +280,7 @@ int main(int argc, char * argv[])
         std::cout << event_time << ' ' << event_id << ' ' << client << ' ';
         print_error_string(std::cout, in);
         std::cerr <<"Incorrect event\n";
-        break;
+        return 3;
     }
   }
   for (auto k = clients.begin(); k != clients.end(); k++)
