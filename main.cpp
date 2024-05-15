@@ -159,6 +159,11 @@ int main(int argc, char * argv[])
           break;
         }
         print_event(std::cout, event_time, event_id, client, table_num);
+        if (table_num > tables_number || table_num <= 0)
+        {
+          std::cout << "Incorrect table number\n";
+          break;
+        }
         if ((event_time < open_time) || (event_time > close_time))
         {
           print_error(std::cout, event_time, "NotOpenYet");
