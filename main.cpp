@@ -55,8 +55,7 @@ int main(int argc, char * argv[])
   }
   if (tables_number < 0)
   {
-    std::cout << tables_number << '\n';
-    std::cerr << "Amount of tables cannot be negative\n";
+    std::cout << tables_number << "Amount of tables cannot be negative\n";
     return 4;
   }
   int price = 0;
@@ -70,13 +69,15 @@ int main(int argc, char * argv[])
   std::deque< Client > queue; //using deque for access from both sides
   if (!in)
   {
-    if (open_time.minutes != 0 && open_time.hours != 0
-        && close_time.minutes != 0 && close_time.hours != 0)
+    if (!(open_time.minutes == 0 && open_time.hours == 0))
     {
-      std::cout << open_time << ' ' << close_time << '\n';
+      std::cout << open_time << ' ';
+    }
+    if(!(close_time.minutes == 0 && close_time.hours == 0))
+    {
+      std::cout << open_time << ' ' << close_time;
     }
     print_error_string(std::cout, in);
-    std::cout << "Incorrect format of time\n";
     return 3;
   }
   std::cout << open_time << '\n';
@@ -88,7 +89,7 @@ int main(int argc, char * argv[])
   }
   if (price < 0)
   {
-    std::cerr << "Price cannot be negative\n";
+    std::cout << price << "Price cannot be negative\n";
     return 4;
   }
   for (size_t i = 0; i < tables_number; i++)
@@ -97,21 +98,23 @@ int main(int argc, char * argv[])
     profit[i] = 0;
     table_time[i] = {0, 0};
   }
+  Time previous_time{0, 0};
   while (!in.eof())
   {
     Time event_time{0, 0};
     int event_id;
     Client client;
     in >> event_time;
-    if (!in)
+    if (!in || (event_time < previous_time))
     {
-      if (event_time.minutes != 0 && event_time.hours)
+      if (!(event_time.minutes == 0 && event_time.hours == 0))
       {
-        std::cout << open_time << ' ' << close_time << '\n';
+        std::cout << event_time;
       }
       print_error_string(std::cout, in);
       return 3;
     }
+    previous_time = event_time;
     if (in.get() == 13) //checking if line ends. 13 is the code of carriage return
     {
       std::cout << event_time;
@@ -145,6 +148,13 @@ int main(int argc, char * argv[])
         std::cout << "Incorrect format of name\n";
         return 3;
       }
+    }
+    if (event_id > 4 || event_id < 1)
+    {
+      std::cout << event_time << ' ' << event_id << ' ' << client << ' ';
+      print_error_string(std::cout, in);
+      std::cout << "Unknown id\n";
+      return 3;
     }
     if (((event_time < open_time) || (event_time > close_time)) && event_id != 2)
       //id 2 is not included because it needs the input of table number
@@ -190,11 +200,6 @@ int main(int argc, char * argv[])
         if (table_num > tables_number || table_num <= 0)
         {
           std::cout << "Incorrect table number\n";
-          return 3;
-        }
-        if (tables_number < 0)
-        {
-          std::cerr << "Table number cannot be negative\n";
           return 3;
         }
         if (clients.find(client.get_name()) != clients.end())
@@ -302,7 +307,6 @@ int main(int argc, char * argv[])
       default:
         std::cout << event_time << ' ' << event_id << ' ' << client << ' ';
         print_error_string(std::cout, in);
-        std::cerr <<"Incorrect event\n";
         return 3;
     }
   }

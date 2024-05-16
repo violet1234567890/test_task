@@ -32,7 +32,7 @@ std::ostream & operator<<(std::ostream & out, const Time & time)
 
 bool operator<(Time & time1, Time & time2)
 {
-  return ((time1.hours < time2.hours) ? true : (time1.minutes < time2.minutes));
+  return ((time1.hours != time2.hours) ? (time1.hours < time2.hours) : (time1.minutes < time2.minutes));
 }
 
 bool operator==(Time & time1, Time & time2)
