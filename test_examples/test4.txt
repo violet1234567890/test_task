@@ -3,7 +3,7 @@
 35
 06:05 1 Anna
 06:30 2 Jill 1
-06:59 8 Ivan
+06:59 1 Ivan
 07:01 3 Ivan
 07:05 1 Ivan
 07:10 1 Ivan
@@ -27,8 +27,8 @@
 11:20 2 Alex 5
 11:27 2 Jill 2
 11:50 2 Paul 3
-11:15 3 Rico
-11:16 3 John
+11:55 3 Rico
+11:56 3 John
 12:20 1 Will
 12:30 2 Will 3
 13:40 1 Kate
