@@ -55,7 +55,7 @@ int main(int argc, char * argv[])
   }
   if (tables_number < 0)
   {
-    std::cout << tables_number << "Amount of tables cannot be negative\n";
+    std::cout << tables_number << '\n' << "Amount of tables cannot be negative\n";
     return 4;
   }
   int price = 0;
@@ -89,7 +89,7 @@ int main(int argc, char * argv[])
   }
   if (price < 0)
   {
-    std::cout << price << "Price cannot be negative\n";
+    std::cout << price << '\n' << "Price cannot be negative\n";
     return 4;
   }
   for (size_t i = 0; i < tables_number; i++)
